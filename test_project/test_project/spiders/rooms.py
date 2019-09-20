@@ -15,11 +15,10 @@ class RoomsSpider(Spider):
         'http://flatmates.com.au/rooms/annerley-4103/males']
 
     def parse(self, response):
-        rooms = response.xpath(
-            './/*[@class="ribbon property"]/text()')
-        item = PriceSpiderItem()
-        item['prices'] = rooms.extract()
-        yield item
+        for resource in response.xpath('.//*[@class="ribbon property"]'):
+            item = PriceSpiderItem()
+            item['price'] = resource.xpath("text()").extract_first()
+            yield item
 
         nextUrl = response.xpath(
             '//*[@aria-label="Go to next page"]/@href').extract_first()
