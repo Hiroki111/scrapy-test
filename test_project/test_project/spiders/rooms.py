@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from scrapy import Spider
 from scrapy import Request
-from scrapy.loader import ItemLoader
 from test_project.items import PriceSpiderItem
 from time import sleep
 import random
