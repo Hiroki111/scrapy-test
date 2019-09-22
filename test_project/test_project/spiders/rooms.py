@@ -14,18 +14,14 @@ class RoomsSpider(Spider):
         'http://flatmates.com.au/rooms/annerley-4103/males']
 
     def parse(self, response):
-        result = response.meta.get('result', [])
         for resource in response.xpath('.//*[@class="ribbon property"]'):
-            result.append(resource.xpath("text()").extract_first())
+            item = PriceSpiderItem()
+            item['price'] = resource.xpath("text()").extract_first()
+            yield item
 
         nextUrl = response.xpath(
             '//*[@aria-label="Go to next page"]/@href').extract_first()
-        meta = {'result': result}
 
         if(nextUrl is not None):
             absoluteNextUrl = response.urljoin(nextUrl)
-            yield Request(url=absoluteNextUrl, callback=self.parse, meta=meta)
-        else:
-            item = PriceSpiderItem()
-            item['prices'] = result
-            yield item
+            yield Request(url=absoluteNextUrl, callback=self.parse)
